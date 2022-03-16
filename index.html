@@ -34,9 +34,9 @@ function getLandFloor() {
     sendHTTPSRequest(landFloorURL, fn)
 }
 
-const unimPriceURL = "https://polygon.api.0x.org/swap/v1/price?buyToken=USDC&sellToken=0x64060aB139Feaae7f06Ca4E63189D86aDEb51691&buyAmount=1"
+const unimPriceURL = "https://api.coingecko.com/api/v3/simple/price?ids=unicorn-milk&vs_currencies=usd"
 function getUNIMPrice() {
-    fn = (res) => document.getElementById("unimprice").innerHTML = "UNIM Price: " + String(1 / Number(res.price))
+    fn = (res) => document.getElementById("unimprice").innerHTML = "UNIM Price: " + res["unicorn-milk"].usd
     sendHTTPSRequest(unimPriceURL, fn)
 }
 
