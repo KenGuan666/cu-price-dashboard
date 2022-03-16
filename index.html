@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Crypto Unicorns Prices Dashboard</h1>
+
+<p id="unifloor">Unicorn Floor: 0</p>
+<p id="landfloor">Land Floor: 0</p>
+<p id="unimprice">UNIM Price: 0</p>
+<p id="rbwprice">RBW Price: 0</p>
+
+<button type="button" onclick="update()">Refresh Prices!</button>
+
+<script>
+function sendHTTPSRequest(URL, callbackfn, resType='json') {
+    const http = new XMLHttpRequest()
+
+    http.responseType = resType
+    http.open("GET", URL)
+    http.send()
+
+    http.onload = () => callbackfn(http.response)
+}
+
+const unicornFloorURL = "https://api.opensea.io/api/v1/collection/crypto-unicorns-market/stats"
+function getUnicornFloor() {
+    fn = (res) => document.getElementById("unifloor").innerHTML = "Unicorn Floor: " + res.stats.floor_price
+    sendHTTPSRequest(unicornFloorURL, fn)
+}
+
+const landFloorURL = "https://api.opensea.io/api/v1/collection/crypto-unicorns-land-market/stats"
+function getLandFloor() {
+    fn = (res) => document.getElementById("landfloor").innerHTML = "Land Floor: " + res.stats.floor_price
+    sendHTTPSRequest(landFloorURL, fn)
+}
+
+const unimPriceURL = "https://polygon.api.0x.org/swap/v1/price?buyToken=USDC&sellToken=0x64060aB139Feaae7f06Ca4E63189D86aDEb51691&buyAmount=1"
+function getUNIMPrice() {
+    fn = (res) => document.getElementById("unimprice").innerHTML = "UNIM Price: " + String(1 / Number(res.price))
+    sendHTTPSRequest(unimPriceURL, fn)
+}
+
+const rbwPriceURL = "https://polygon.api.0x.org/swap/v1/price?buyToken=USDC&sellToken=0x431CD3C9AC9Fc73644BF68bF5691f4B83F9E104f&buyAmount=1"
+function getRBWPrice() {
+    fn = (res) => document.getElementById("rbwprice").innerHTML = "RBW Price: " + String(1 / Number(res.price))
+    sendHTTPSRequest(rbwPriceURL, fn)
+}
+
+function update() {
+    getUnicornFloor()
+    getLandFloor()
+    getUNIMPrice()
+    getRBWPrice()
+}
+
+update()
+</script>
+
+</body>
+</html>
