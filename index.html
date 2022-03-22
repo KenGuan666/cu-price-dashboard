@@ -40,10 +40,16 @@ function getUNIMPrice() {
     sendHTTPSRequest(unimPriceURL, fn)
 }
 
-const rbwPriceURL = "https://polygon.api.0x.org/swap/v1/price?buyToken=USDC&sellToken=0x431CD3C9AC9Fc73644BF68bF5691f4B83F9E104f&buyAmount=1"
+const rbwPriceURL = "https://api.coingecko.com/api/v3/simple/price?ids=rainbow-token-2&vs_currencies=usd"
 function getRBWPrice() {
-    fn = (res) => document.getElementById("rbwprice").innerHTML = "RBW Price: " + String(1 / Number(res.price))
+    fn = (res) => document.getElementById("rbwprice").innerHTML = "RBW Price: " + res["rainbow-token-2"].usd
     sendHTTPSRequest(rbwPriceURL, fn)
+}
+
+const rbwPrice0xURL = "https://polygon.api.0x.org/swap/v1/price?buyToken=USDC&sellToken=0x431CD3C9AC9Fc73644BF68bF5691f4B83F9E104f&buyAmount=1"
+function getRBWPriceFrom0x() {
+    fn = (res) => document.getElementById("rbwprice").innerHTML = "RBW Price: " + String(1 / Number(res.price))
+    sendHTTPSRequest(rbwPrice0xURL, fn)
 }
 
 function update() {
