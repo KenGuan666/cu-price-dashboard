@@ -4,14 +4,25 @@
 
 <h1>Crypto Unicorns Prices Dashboard</h1>
 
+<button type="button" onclick="update()">Refresh Prices!</button>
+
 <p id="unifloor">Unicorn Floor: 0</p>
 <p id="landfloor">Land Floor: 0</p>
 <p id="unimprice">UNIM Price: 0</p>
 <p id="rbwprice">RBW Price: 0</p>
 
-<button type="button" onclick="update()">Refresh Prices!</button>
+
+<table style="table-layout: fixed; width: 100%; border: 1px solid black;" id="breedtable">
+    <caption>Breed Cost USD | Evolution Cost <a id="evocost"></a> USD + 100 Class Berries | UNIM Cost Table <a href="https://onedrive.live.com/view.aspx?resid=19C4C16846797628!21441&ithint=file%2cxlsx&authkey=!ALUoGtl5hUdXNeg">in SpreadSheet</a> | Credit to KeizerMc#0001 for Spreadsheet & Help </caption>
+</table>
+
+<!-- <button type="button" id="breedtablebutton" onclick="toggleBreedTable()">Show Breed Cost Table</button> -->
+
 
 <script>
+var unimPrice = 0
+var rbwPrice = 0
+
 function sendHTTPSRequest(URL, callbackfn, resType='json') {
     const http = new XMLHttpRequest()
 
@@ -36,13 +47,21 @@ function getLandFloor() {
 
 const unimPriceURL = "https://api.coingecko.com/api/v3/simple/price?ids=unicorn-milk&vs_currencies=usd"
 function getUNIMPrice() {
-    fn = (res) => document.getElementById("unimprice").innerHTML = "UNIM Price: " + res["unicorn-milk"].usd
+    fn = (res) => {
+        unimPrice = Number(res["unicorn-milk"].usd)
+        document.getElementById("unimprice").innerHTML = "UNIM Price: " + String(unimPrice)
+        updateBreedTable()
+    }
     sendHTTPSRequest(unimPriceURL, fn)
 }
 
 const rbwPriceURL = "https://api.coingecko.com/api/v3/simple/price?ids=rainbow-token-2&vs_currencies=usd"
 function getRBWPrice() {
-    fn = (res) => document.getElementById("rbwprice").innerHTML = "RBW Price: " + res["rainbow-token-2"].usd
+    fn = (res) => {
+        rbwPrice = Number(res["rainbow-token-2"].usd)
+        document.getElementById("rbwprice").innerHTML = "RBW Price: " + String(rbwPrice)
+        updateBreedTable()
+    }
     sendHTTPSRequest(rbwPriceURL, fn)
 }
 
@@ -52,6 +71,58 @@ function getRBWPriceFrom0x() {
     sendHTTPSRequest(rbwPrice0xURL, fn)
 }
 
+const unimBreedingCost = [0, 300, 700, 1500, 2700, 4200, 6000, 9000, 12000]
+function createBreedTable() {
+    let table = document.getElementById("breedtable")
+    for (let row = 0; row <= 8; row++) {
+        currRow = table.insertRow(row)
+        for (let col = 0; col <= 8; col++) {
+            currCell = currRow.insertCell(col)
+            currCell.innerHTML = row + col
+
+            green = ["B4FBAB", "61F84D"]
+            yellow = ["F7F9B9", "FAFF38"]
+            red = ["FBB4B4", "FC7070"]
+
+            color = red
+            if (col <= 5 && row <= 5) color = yellow
+            if (col <= 3 && row <= 3) color = green
+
+            if (col == row) color = color[1]
+            else color = color[0]
+
+            currCell.style = "border: 1px solid black; text-align: center;"
+            if (col * row != 0)
+                currCell.style.backgroundColor = "#" + color
+        }
+    }
+    table.rows[0].cells[0].innerHTML = "Breed Point"
+    // table.style.display = "none"
+}
+
+function updateBreedTable() {
+    let table = document.getElementById("breedtable")
+    for (let row = 1; row <= 8; row++) {
+        for (let col = 1; col <= 8; col++) {
+            unimCost = unimBreedingCost[row] + unimBreedingCost[col]
+            table.rows[row].cells[col].innerHTML = Math.round((unimCost * 1.0 * unimPrice + 10.0 * rbwPrice) * 100) / 100
+        }
+    }
+    document.getElementById("evocost").innerHTML = Math.round((2500 * unimPrice + 25 * rbwPrice) * 100) / 100
+}
+
+function toggleBreedTable() {
+    let table = document.getElementById("breedtable")
+    let button = document.getElementById("breedtablebutton")
+    if (table.style.display == "none") {
+        table.style.display = "block"
+        button.innerHTML = "Hide Breed Cost Table"
+    } else {
+        table.style.display = "none"
+        button.innerHTML = "Show Breed Cost Table"  
+    }
+}
+
 function update() {
     getUnicornFloor()
     getLandFloor()
@@ -59,6 +130,7 @@ function update() {
     getRBWPrice()
 }
 
+createBreedTable()
 update()
 </script>
 
