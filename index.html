@@ -93,6 +93,9 @@
 <p>
     Find me on Discord! Ken12369#3232
 </p>
+<p>
+    Buy me a UNIM! <a id="address">0xe46Ac08Fd19b7A2959258E7A433386561138C3d5</a> <button onclick="copyAddr()">Copy to Clipboard</button>
+</p>
 
 <script>
 var unimPrice = 0
@@ -149,26 +152,26 @@ function getRBWPriceFrom0x() {
 const unimBreedingCost = [0, 300, 700, 1500, 2700, 4200, 6000, 9000, 12000]
 function createBreedTable() {
     let table = document.getElementById("breedtable")
+
+    let green = ["B4FBAB", "61F84D"]
+    let yellow = ["F7F9B9", "FAFF38"]
+    let red = ["FBB4B4", "FC7070"]
     for (let row = 0; row <= 8; row++) {
         currRow = table.insertRow(row)
         for (let col = 0; col <= 8; col++) {
             currCell = currRow.insertCell(col)
             currCell.innerHTML = row + col
 
-            green = ["B4FBAB", "61F84D"]
-            yellow = ["F7F9B9", "FAFF38"]
-            red = ["FBB4B4", "FC7070"]
-
-            color = red
-            if (col <= 5 && row <= 5) color = yellow
-            if (col <= 3 && row <= 3) color = green
-
-            if (col == row) color = color[1]
-            else color = color[0]
-
             currCell.style = "border: 1px solid black; text-align: center;"
-            if (col * row != 0)
+            if (col * row != 0) {
+                let color = red
+                if (col <= 5 && row <= 5) color = yellow
+                if (col <= 3 && row <= 3) color = green
+
+                if (col == row) color = color[1]
+                else color = color[0]
                 currCell.style.backgroundColor = "#" + color
+            }
         }
     }
     table.rows[0].cells[0].innerHTML = "Breed Point"
@@ -179,7 +182,7 @@ function updateBreedTable() {
     let table = document.getElementById("breedtable")
     evoCost = Math.round((2500 * unimPrice + 25 * rbwPrice) * 100) / 100
     addedVal = document.getElementById("evotoggle").checked ? evoCost : 0
-    
+
     for (let row = 1; row <= 8; row++) {
         for (let col = 1; col <= 8; col++) {
             unimCost = unimBreedingCost[row] + unimBreedingCost[col]
@@ -189,16 +192,10 @@ function updateBreedTable() {
     document.getElementById("evocost").innerHTML = evoCost
 }
 
-function toggleBreedTable() {
-    let table = document.getElementById("breedtable")
-    let button = document.getElementById("breedtablebutton")
-    if (table.style.display == "none") {
-        table.style.display = "block"
-        button.innerHTML = "Hide Breed Cost Table"
-    } else {
-        table.style.display = "none"
-        button.innerHTML = "Show Breed Cost Table"  
-    }
+function copyAddr() {
+    let addr = document.getElementById("address")
+    navigator.clipboard.writeText(addr.innerHTML)
+    alert("Copied: " + addr.innerHTML)
 }
 
 function update() {
