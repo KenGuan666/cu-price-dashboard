@@ -85,7 +85,7 @@
             <input type="checkbox" id="evotoggle" onchange="updateBreedTable()">
             <span class="slider round"></span>
         </label>
-        <b> Toggle to Include Evolution Cost <a id="evocost"></a> USD</b> | Cost in UNIM/RBW <a href="https://onedrive.live.com/view.aspx?resid=19C4C16846797628!21441&ithint=file%2cxlsx&authkey=!ALUoGtl5hUdXNeg">in SpreadSheet</a> | Credit to KeizerMc#0001 for Spreadsheet & Help </caption>
+        <b> Toggle to Include Evolution Cost <a id="evocost"></a> USD</b> | Does NOT include berry cost!
 </table>
 
 <br>
@@ -180,13 +180,13 @@ function createBreedTable() {
 
 function updateBreedTable() {
     let table = document.getElementById("breedtable")
-    evoCost = Math.round((2500 * unimPrice + 25 * rbwPrice) * 100) / 100
+    evoCost = Math.round((5000 * unimPrice + 100 * rbwPrice) * 100) / 100
     addedVal = document.getElementById("evotoggle").checked ? evoCost : 0
 
     for (let row = 1; row <= 8; row++) {
         for (let col = 1; col <= 8; col++) {
             unimCost = unimBreedingCost[row] + unimBreedingCost[col]
-            table.rows[row].cells[col].innerHTML = Math.round((unimCost * 1.0 * unimPrice + 10.0 * rbwPrice  + addedVal) * 100) / 100
+            table.rows[row].cells[col].innerHTML = Math.round((unimCost * 1.0 * unimPrice + 50.0 * rbwPrice  + addedVal) * 100) / 100
         }
     }
     document.getElementById("evocost").innerHTML = evoCost
